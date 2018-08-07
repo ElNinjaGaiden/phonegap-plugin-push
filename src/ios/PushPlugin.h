@@ -82,4 +82,7 @@
 @property(nonatomic, strong) NSString *fcmRegistrationToken;
 @property(nonatomic, strong) NSArray *fcmTopics;
 
+// Custom properties
+@property (nonatomic, retain) NSArray *notificationsToBroadcast;
+
 @end

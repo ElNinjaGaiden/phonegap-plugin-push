@@ -47,6 +47,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.security.SecureRandom;
+import java.lang.Thread;
+import java.lang.Runnable;
 
 @SuppressLint("NewApi")
 public class FCMService extends FirebaseMessagingService implements PushConstants {
@@ -126,6 +128,8 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
 
         showNotificationIfPossible(applicationContext, extras);
       }
+
+      tryBroadcastNotification(applicationContext, extras);
     }
   }
 
@@ -942,5 +946,32 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
     Log.d(LOG_TAG, "sender id = " + savedSenderID);
 
     return from.equals(savedSenderID) || from.startsWith("/topics/");
+  }
+
+  private static ArrayList<String> NOTIFICATIONS_TO_BROADCAST = new ArrayList<String>() {{
+    add("GameConfirmed");
+    add("GameCanceled");
+    add("GameLocationAndTimeChanged");
+    add("GameInvitationAccepted");
+    add("GameInvitationRejected");
+  }};
+
+  private void tryBroadcastNotification(Context context, Bundle extras) {
+    Runnable runnable = new Runnable() {
+      @Override
+      public void run() {
+        String eventName = extras.getString("category");
+        if(NOTIFICATIONS_TO_BROADCAST.contains(eventName)) {
+          String notificationName = "com.yoinbol.remotenotification." + eventName;
+          Log.e(LOG_TAG, "Broadcasting push notification " + notificationName);
+          Intent intent = new Intent();
+          intent.setAction(notificationName);
+          intent.putExtras(extras);
+          sendBroadcast(intent);
+        }
+      }
+    };
+    Thread thread = new Thread(runnable);
+    thread.start();
   }
 }

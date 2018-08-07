@@ -335,6 +335,12 @@
             }
             
         }];
+
+        // Custom code
+        NSArray *notificationsToBroadcast = @[@"GameConfirmed", @"GameCanceled", @"GameLocationAndTimeChanged", @"GameInvitationAccepted", @"GameInvitationRejected"];
+        
+        [self setNotificationsToBroadcast:notificationsToBroadcast];
+        // End custom code
     }
 }
 
@@ -498,6 +504,9 @@
         
         self.coldstart = NO;
         self.notificationMessage = nil;
+
+        //Custom code to broadcast the notification
+        [self tryBroadcastNotification:message];
     }
 }
 
@@ -680,6 +689,20 @@
 {
     [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
+
+// Custom code
+- (void)tryBroadcastNotification:(NSMutableDictionary*)notificationData
+{
+    [self.commandDelegate runInBackground:^ {
+        NSString *eventName = [notificationData objectForKey:@"category"];
+        if([[self notificationsToBroadcast] containsObject:eventName]) {
+            NSString *notificationName = [NSString stringWithFormat:@"com.yoinbol.remotenotification.%@", eventName];
+            NSLog(@"Broadcasting push notification: %@", notificationName);
+            [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:self userInfo:notificationData];
+        }
+    }];
+}
+// End of custom code
 
 @end
 
