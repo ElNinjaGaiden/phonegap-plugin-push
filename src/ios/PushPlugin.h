@@ -82,7 +82,11 @@
 @property(nonatomic, strong) NSString *fcmRegistrationToken;
 @property(nonatomic, strong) NSArray *fcmTopics;
 
-// Custom properties
+// Custom code
 @property (nonatomic, retain) NSArray *notificationsToBroadcast;
+
+- (void)configurePushNotificationsToListen;
+- (void)tryBroadcastNotification:(NSDictionary*)notificationData;
+// End custom code
 
 @end

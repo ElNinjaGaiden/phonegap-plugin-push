@@ -337,9 +337,7 @@
         }];
 
         // Custom code
-        NSArray *notificationsToBroadcast = @[@"GameConfirmed", @"GameCanceled", @"GameLocationAndTimeChanged", @"GameInvitationAccepted", @"GameInvitationRejected"];
-        
-        [self setNotificationsToBroadcast:notificationsToBroadcast];
+        [self configurePushNotificationsToListen];
         // End custom code
     }
 }
@@ -691,14 +689,20 @@
 }
 
 // Custom code
+- (void) configurePushNotificationsToListen {
+    NSArray *notificationsToBroadcast = @[@"GameConfirmed", @"GameCanceled", @"GameLocationAndTimeChanged", @"GameInvitationAccepted", @"GameInvitationRejected"];    
+    [self setNotificationsToBroadcast:notificationsToBroadcast];
+}
+
 - (void)tryBroadcastNotification:(NSMutableDictionary*)notificationData
 {
     [self.commandDelegate runInBackground:^ {
-        NSString *eventName = [notificationData objectForKey:@"category"];
+        NSDictionary* additionalData = [notificationData objectForKey:@"additionalData"];
+        NSString *eventName = [additionalData objectForKey:@"category"];
         if([[self notificationsToBroadcast] containsObject:eventName]) {
             NSString *notificationName = [NSString stringWithFormat:@"com.yoinbol.remotenotification.%@", eventName];
             NSLog(@"Broadcasting push notification: %@", notificationName);
-            [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:self userInfo:notificationData];
+            [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:self userInfo:additionalData];
         }
     }];
 }
