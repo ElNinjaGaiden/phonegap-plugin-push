@@ -48,6 +48,10 @@ import java.util.List;
 import java.util.Map;
 import java.security.SecureRandom;
 
+//Custom code
+import com.adobe.phonegap.push.custom.NotificationsProxy;
+//End custom code
+
 @SuppressLint("NewApi")
 public class FCMService extends FirebaseMessagingService implements PushConstants {
 
@@ -102,6 +106,12 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
       if (clearBadge) {
         PushPlugin.setApplicationIconBadgeNumber(getApplicationContext(), 0);
       }
+
+      //Custom code
+      NotificationsProxy notificationsProxy = new NotificationsProxy();
+      extras = notificationsProxy.checkValidNotification(extras);
+      if(extras == null) return;
+      //End custom code
 
       // if we are in the foreground and forceShow is `false` only send data
       if (!forceShow && PushPlugin.isInForeground()) {

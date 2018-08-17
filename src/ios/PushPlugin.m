@@ -26,6 +26,10 @@
 //  See GGLInstanceID.h
 #define GMP_NO_MODULES true
 
+//Custom code
+#import "NotificationsProxy.h"
+//End custom code
+
 #import "PushPlugin.h"
 @import FirebaseInstanceID;
 @import FirebaseMessaging;
@@ -483,6 +487,7 @@
                 [additionalData setObject:[notificationMessage objectForKey:key] forKey:key];
             }
         }
+        
 
         if (isInline) {
             [additionalData setObject:[NSNumber numberWithBool:YES] forKey:@"foreground"];
@@ -497,11 +502,20 @@
         }
 
         [message setObject:additionalData forKey:@"additionalData"];
+        
+        //Custom code
+        NotificationsProxy* notificationsProxy = [NotificationsProxy alloc];
+        message = [notificationsProxy checkValidNotification:message];
+        //End custom code
 
         // send notification message
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:message];
-        [pluginResult setKeepCallbackAsBool:YES];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
+        //Custom "if"
+        if(message != nil) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:message];
+            [pluginResult setKeepCallbackAsBool:YES];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
+        }
+        //End custom "if"
 
         self.coldstart = NO;
         self.notificationMessage = nil;

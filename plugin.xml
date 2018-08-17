@@ -52,6 +52,11 @@
     <source-file src="src/android/com/adobe/phonegap/push/PushPlugin.java" target-dir="src/com/adobe/phonegap/push/"/>
     <source-file src="src/android/com/adobe/phonegap/push/BackgroundActionButtonHandler.java" target-dir="src/com/adobe/phonegap/push/"/>
     <source-file src="src/android/com/adobe/phonegap/push/PushDismissedHandler.java" target-dir="src/com/adobe/phonegap/push/"/>
+    <!-- Custom code -->
+    <source-file src="src/android/com/adobe/phonegap/push/custom/NotificationsProxy.java" target-dir="src/com/adobe/phonegap/push/custom/"/>
+    <source-file src="src/android/com/adobe/phonegap/push/custom/resources/GamesRemindersResources_es.java" target-dir="src/com/adobe/phonegap/push/custom/resources/"/>
+    <source-file src="src/android/com/adobe/phonegap/push/custom/resources/GamesRemindersResources_en.java" target-dir="src/com/adobe/phonegap/push/custom/resources/"/>
+    <!-- End custom code -->
   </platform>
   <platform name="browser">
     <js-module src="www/browser/push.js" name="BrowserPush">
@@ -84,6 +89,10 @@
     <header-file src="src/ios/PushPlugin.h"/>
     <framework src="FirebaseMessaging" type="podspec" spec="~> 2.0.0"/>
     <framework src="PushKit.framework"/>
+    <!-- Custom code -->
+    <source-file src="src/ios/NotificationsProxy.m"/>
+    <header-file src="src/ios/NotificationsProxy.h"/>
+    <!-- End custom code -->
   </platform>
   <platform name="windows">
     <hook type="after_plugin_install" src="hooks/windows/setToastCapable.js"/>
